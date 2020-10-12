@@ -53,7 +53,7 @@ public class FloodgateStorage {
                 "platform int NOT NULL," +
                 "bedrockUsername VARCHAR(32) NOT NULL UNIQUE," +
                 "javaUsername VARCHAR(16) NOT NULL," +
-                "linkedPlayer VARCHAR(16) NOT NULL," +
+                "linkedPlayer VARCHAR(16) NULL," +
                 "languageCode VARCHAR(8) NOT NULL," +
                 "version VARCHAR(16) NOT NULL" +
                 (sqlite ? "" : ",PRIMARY KEY (id)") +
