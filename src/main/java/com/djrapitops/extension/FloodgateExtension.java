@@ -23,6 +23,7 @@
 
 package com.djrapitops.extension;
 
+import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.annotation.Conditional;
@@ -31,11 +32,9 @@ import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import org.geysermc.floodgate.FloodgateAPI;
-import org.geysermc.floodgate.FloodgatePlayer;
 import org.geysermc.floodgate.util.DeviceOS;
 
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * The DataExtension for Floodgate.
@@ -49,6 +48,11 @@ public class FloodgateExtension implements DataExtension {
 
     public FloodgateExtension(FloodgateStorage storage) {
         this.storage = storage;
+    }
+
+    @Override
+    public CallEvents[] callExtensionMethodsOn() {
+        return new CallEvents[0];
     }
 
     private boolean isDataAvailable(UUID playerUUID) {
