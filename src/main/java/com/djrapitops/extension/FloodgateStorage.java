@@ -73,10 +73,18 @@ public class FloodgateStorage {
 
     public void storePlayer(UUID playerUUID, DeviceOS platform, String bedrockUsername, String javaUsername,
                             String linkedJavaPlayer, String languageCode, String version) throws ExecutionException {
-        String update = "UPDATE plan_platforms SET platform = ?, bedrockUsername = ?, javaUsername = ?, " +
-                "linkedPlayer = ?, languageCode = ?, version = ?, WHERE uuid = ?";
-        String insert = "INSERT INTO plan_platforms (platform, bedrockUsername, javaUsername, " +
-                "linkedPlayer, languageCode, version, uuid) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String update = "UPDATE plan_platforms SET " +
+                "platform = ?, " +
+                "bedrockUsername = ?, " +
+                "javaUsername = ?, " +
+                "linkedPlayer = ?, " +
+                "languageCode = ?, " +
+                "version = ? " +
+                "WHERE uuid = ?";
+        String insert = "INSERT INTO plan_platforms (" +
+                "platform, bedrockUsername, javaUsername, " +
+                "linkedPlayer, languageCode, version, uuid" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         QueryService.ThrowingConsumer<PreparedStatement> dataSetter = preparedStatement -> {
             preparedStatement.setInt(1, platform.ordinal());
