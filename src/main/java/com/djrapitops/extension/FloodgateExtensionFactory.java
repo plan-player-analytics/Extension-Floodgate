@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2020 Risto Lahtela (Rsl1122)
+ * Copyright(c) 2020 Risto Lahtela (AuroraLS3)
  *
  * The MIT License(MIT)
  *
@@ -28,7 +28,6 @@ import com.djrapitops.plan.extension.DataExtension;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * Factory for the FloodgateExtension.
