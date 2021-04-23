@@ -75,25 +75,25 @@ public class FloodgateStorage {
                             String linkedJavaPlayer, String languageCode, String version) throws ExecutionException {
         String update = "UPDATE plan_platforms SET " +
                 "platform = ?, " +
-                "bedrockUsername = ?, " +
                 "javaUsername = ?, " +
                 "linkedPlayer = ?, " +
                 "languageCode = ?, " +
                 "version = ? " +
-                "WHERE uuid = ?";
+                "WHERE uuid = ? " +
+                "OR bedrockUsername = ?";
         String insert = "INSERT INTO plan_platforms (" +
-                "platform, bedrockUsername, javaUsername, " +
-                "linkedPlayer, languageCode, version, uuid" +
+                "platform, javaUsername, linkedPlayer, " +
+                "languageCode, version, uuid, bedrockUsername" +
                 ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         QueryService.ThrowingConsumer<PreparedStatement> dataSetter = preparedStatement -> {
             preparedStatement.setInt(1, platform.ordinal());
-            preparedStatement.setString(2, bedrockUsername);
-            preparedStatement.setString(3, javaUsername);
-            preparedStatement.setString(4, linkedJavaPlayer);
-            preparedStatement.setString(5, languageCode);
-            preparedStatement.setString(6, version);
-            preparedStatement.setString(7, playerUUID.toString());
+            preparedStatement.setString(2, javaUsername);
+            preparedStatement.setString(3, linkedJavaPlayer);
+            preparedStatement.setString(4, languageCode);
+            preparedStatement.setString(5, version);
+            preparedStatement.setString(6, playerUUID.toString());
+            preparedStatement.setString(7, bedrockUsername);
         };
 
         AtomicBoolean updated = new AtomicBoolean(false);

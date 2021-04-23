@@ -5,7 +5,7 @@
 
     <groupId>com.djrapitops</groupId>
     <artifactId>Extension-Floodgate</artifactId>
-    <version>1.0-R1.1</version>
+    <version>1.0-R1.2</version>
     <build>
         <plugins>
             <plugin>
