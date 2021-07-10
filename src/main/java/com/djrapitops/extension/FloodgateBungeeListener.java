@@ -30,9 +30,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
-import org.geysermc.floodgate.FloodgateAPI;
-import org.geysermc.floodgate.FloodgatePlayer;
-import org.geysermc.floodgate.LinkedPlayer;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.floodgate.api.player.FloodgatePlayer;
+import org.geysermc.floodgate.util.LinkedPlayer;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -56,7 +56,7 @@ public class FloodgateBungeeListener extends FloodgateListener implements Listen
     public void onLogin(PostLoginEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
 
-        FloodgatePlayer floodgatePlayer = FloodgateAPI.getPlayer(uuid);
+        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
         if (floodgatePlayer == null) return;
 
         LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
@@ -65,7 +65,7 @@ public class FloodgateBungeeListener extends FloodgateListener implements Listen
             try {
                 storage.storePlayer(
                         uuid,
-                        floodgatePlayer.getDeviceOS(),
+                        floodgatePlayer.getDeviceOs(),
                         floodgatePlayer.getUsername(),
                         floodgatePlayer.getJavaUsername(),
                         linkedPlayer != null ? linkedPlayer.getJavaUsername() : null,

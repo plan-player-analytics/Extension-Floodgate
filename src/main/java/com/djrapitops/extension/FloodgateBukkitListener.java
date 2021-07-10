@@ -30,9 +30,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
-import org.geysermc.floodgate.FloodgateAPI;
-import org.geysermc.floodgate.FloodgatePlayer;
-import org.geysermc.floodgate.LinkedPlayer;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.floodgate.api.player.FloodgatePlayer;
+import org.geysermc.floodgate.util.LinkedPlayer;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -55,7 +55,7 @@ public class FloodgateBukkitListener extends FloodgateListener implements Listen
     public void onJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
 
-        FloodgatePlayer floodgatePlayer = FloodgateAPI.getPlayer(uuid);
+        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
         if (floodgatePlayer == null) return;
 
         LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
@@ -64,7 +64,7 @@ public class FloodgateBukkitListener extends FloodgateListener implements Listen
             try {
                 storage.storePlayer(
                         uuid,
-                        floodgatePlayer.getDeviceOS(),
+                        floodgatePlayer.getDeviceOs(),
                         floodgatePlayer.getUsername(),
                         floodgatePlayer.getJavaUsername(),
                         linkedPlayer != null ? linkedPlayer.getJavaUsername() : null,

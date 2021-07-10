@@ -31,8 +31,8 @@ import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
-import org.geysermc.floodgate.FloodgateAPI;
-import org.geysermc.floodgate.util.DeviceOS;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.floodgate.util.DeviceOs;
 
 import java.util.UUID;
 
@@ -93,7 +93,7 @@ public class FloodgateExtension implements DataExtension {
             iconFamily = Family.SOLID
     )
     public boolean bedrock(UUID playerUUID) {
-        return isDataAvailable(playerUUID) || FloodgateAPI.isFloodgateId(playerUUID);
+        return isDataAvailable(playerUUID) || FloodgateApi.getInstance().isFloodgateId(playerUUID);
     }
 
     @StringProvider(
@@ -106,8 +106,8 @@ public class FloodgateExtension implements DataExtension {
     )
     @Conditional("data-available")
     public String device(UUID playerUUID) {
-        DeviceOS deviceOS = storage.getPlatform(playerUUID);
-        if (deviceOS == null) deviceOS = DeviceOS.UNKNOWN;
+        DeviceOs deviceOS = storage.getPlatform(playerUUID);
+        if (deviceOS == null) deviceOS = DeviceOs.UNKNOWN;
         return deviceOS.toString();
     }
 

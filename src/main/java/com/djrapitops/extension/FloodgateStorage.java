@@ -24,7 +24,7 @@
 package com.djrapitops.extension;
 
 import com.djrapitops.plan.query.QueryService;
-import org.geysermc.floodgate.util.DeviceOS;
+import org.geysermc.floodgate.util.DeviceOs;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,7 +71,7 @@ public class FloodgateStorage {
         dropTable();
     }
 
-    public void storePlayer(UUID playerUUID, DeviceOS platform, String bedrockUsername, String javaUsername,
+    public void storePlayer(UUID playerUUID, DeviceOs platform, String bedrockUsername, String javaUsername,
                             String linkedJavaPlayer, String languageCode, String version) throws ExecutionException {
         String update = "UPDATE plan_platforms SET " +
                 "platform = ?, " +
@@ -123,13 +123,13 @@ public class FloodgateStorage {
         );
     }
 
-    public DeviceOS getPlatform(UUID playerUUID) {
+    public DeviceOs getPlatform(UUID playerUUID) {
         String sql = "SELECT platform FROM plan_platforms WHERE uuid=?";
 
         return queryService.query(sql, statement -> {
             statement.setString(1, playerUUID.toString());
             try (ResultSet set = statement.executeQuery()) {
-                return set.next() ? DeviceOS.getById(set.getInt("platform")) : null;
+                return set.next() ? DeviceOs.getById(set.getInt("platform")) : null;
             }
         });
     }
