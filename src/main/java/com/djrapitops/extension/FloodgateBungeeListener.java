@@ -54,28 +54,38 @@ public class FloodgateBungeeListener extends FloodgateListener implements Listen
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onLogin(PostLoginEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        try {
+            UUID uuid = event.getPlayer().getUniqueId();
 
-        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
-        if (floodgatePlayer == null) return;
+            FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
+            if (floodgatePlayer == null) return;
 
-        LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
+            LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
 
-        ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
-            try {
-                storage.storePlayer(
-                        uuid,
-                        floodgatePlayer.getDeviceOs(),
-                        floodgatePlayer.getUsername(),
-                        floodgatePlayer.getJavaUsername(),
-                        linkedPlayer != null ? linkedPlayer.getJavaUsername() : null,
-                        floodgatePlayer.getLanguageCode(),
-                        floodgatePlayer.getVersion()
-                );
-                caller.updatePlayerData(uuid, event.getPlayer().getName());
-            } catch (ExecutionException ignored) {
-                // Ignore
-            }
-        });
+            ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
+                storeData(event, uuid, floodgatePlayer, linkedPlayer);
+            });
+        } catch (LinkageError ignored) {
+            // Related to
+            // https://github.com/plan-player-analytics/Plan/issues/2004
+            // https://github.com/GeyserMC/Floodgate/issues/178
+        }
+    }
+
+    private void storeData(PostLoginEvent event, UUID uuid, FloodgatePlayer floodgatePlayer, LinkedPlayer linkedPlayer) {
+        try {
+            storage.storePlayer(
+                    uuid,
+                    floodgatePlayer.getDeviceOs(),
+                    floodgatePlayer.getUsername(),
+                    floodgatePlayer.getJavaUsername(),
+                    linkedPlayer != null ? linkedPlayer.getJavaUsername() : null,
+                    floodgatePlayer.getLanguageCode(),
+                    floodgatePlayer.getVersion()
+            );
+            caller.updatePlayerData(uuid, event.getPlayer().getName());
+        } catch (ExecutionException ignored) {
+            // Ignore
+        }
     }
 }
