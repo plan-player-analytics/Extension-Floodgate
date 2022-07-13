@@ -1,5 +1,5 @@
 /*
- * Copyright(c) 2020 Risto Lahtela (AuroraLS3)
+ * Copyright(c) 2020 AuroraLS3
  *
  * The MIT License(MIT)
  *
@@ -21,15 +21,15 @@
  * THE SOFTWARE.
  */
 
-package com.djrapitops.extension;
+package net.playeranalytics.extension.floodgate;
 
 import com.djrapitops.plan.extension.Caller;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.Plugin;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.util.LinkedPlayer;
@@ -37,22 +37,23 @@ import org.geysermc.floodgate.util.LinkedPlayer;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-public class FloodgateBukkitListener extends FloodgateListener implements Listener {
+public class FloodgateBungeeListener extends FloodgateListener implements Listener {
 
     private final Plugin plugin;
 
-    public FloodgateBukkitListener(FloodgateStorage storage, Caller caller) {
+    public FloodgateBungeeListener(FloodgateStorage storage, Caller caller) {
         super(storage, caller);
-        plugin = Bukkit.getPluginManager().getPlugin("Plan");
+
+        plugin = ProxyServer.getInstance().getPluginManager().getPlugin("Plan");
     }
 
     @Override
     public void register() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onJoin(PlayerJoinEvent event) {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onLogin(PostLoginEvent event) {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
 
@@ -61,7 +62,7 @@ public class FloodgateBukkitListener extends FloodgateListener implements Listen
 
             LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            ProxyServer.getInstance().getScheduler().runAsync(plugin, () -> {
                 storeData(event, uuid, floodgatePlayer, linkedPlayer);
             });
         } catch (LinkageError ignored) {
@@ -71,7 +72,7 @@ public class FloodgateBukkitListener extends FloodgateListener implements Listen
         }
     }
 
-    private void storeData(PlayerJoinEvent event, UUID uuid, FloodgatePlayer floodgatePlayer, LinkedPlayer linkedPlayer) {
+    private void storeData(PostLoginEvent event, UUID uuid, FloodgatePlayer floodgatePlayer, LinkedPlayer linkedPlayer) {
         try {
             storage.storePlayer(
                     uuid,
