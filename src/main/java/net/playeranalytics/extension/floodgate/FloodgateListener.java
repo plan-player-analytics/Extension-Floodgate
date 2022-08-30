@@ -30,7 +30,7 @@ public abstract class FloodgateListener {
     protected final FloodgateStorage storage;
     protected final Caller caller;
 
-    public FloodgateListener(FloodgateStorage storage, Caller caller) {
+    protected FloodgateListener(FloodgateStorage storage, Caller caller) {
         this.storage = storage;
         this.caller = caller;
     }

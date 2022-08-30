@@ -129,7 +129,7 @@ public class FloodgateStorage {
         return queryService.query(sql, statement -> {
             statement.setString(1, playerUUID.toString());
             try (ResultSet set = statement.executeQuery()) {
-                return set.next() ? DeviceOs.getById(set.getInt("platform")) : null;
+                return set.next() ? DeviceOs.fromId(set.getInt("platform")) : null;
             }
         });
     }

@@ -24,12 +24,12 @@
 package net.playeranalytics.extension.floodgate;
 
 import com.djrapitops.plan.extension.Caller;
-import org.bukkit.Bukkit;
+import com.djrapitops.plan.settings.ListenerService;
+import com.djrapitops.plan.settings.SchedulerService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.Plugin;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.util.LinkedPlayer;
@@ -39,16 +39,13 @@ import java.util.concurrent.ExecutionException;
 
 public class FloodgateBukkitListener extends FloodgateListener implements Listener {
 
-    private final Plugin plugin;
-
     public FloodgateBukkitListener(FloodgateStorage storage, Caller caller) {
         super(storage, caller);
-        plugin = Bukkit.getPluginManager().getPlugin("Plan");
     }
 
     @Override
     public void register() {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        ListenerService.getInstance().registerListenerForPlan(this);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -61,9 +58,7 @@ public class FloodgateBukkitListener extends FloodgateListener implements Listen
 
             LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                storeData(event, uuid, floodgatePlayer, linkedPlayer);
-            });
+            SchedulerService.getInstance().runAsync(() -> storeData(event, uuid, floodgatePlayer, linkedPlayer));
         } catch (LinkageError ignored) {
             // Related to
             // https://github.com/plan-player-analytics/Plan/issues/2004

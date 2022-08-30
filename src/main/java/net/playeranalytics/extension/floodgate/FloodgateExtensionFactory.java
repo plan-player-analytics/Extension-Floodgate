@@ -59,23 +59,25 @@ public class FloodgateExtensionFactory {
     }
 
     private FloodgateExtension createNewExtension() {
-        BiFunction<FloodgateStorage, Caller, FloodgateListener> listenerConstructor;
+        BiFunction<FloodgateStorage, Caller, FloodgateListener> constructListener = getListenerConstructor();
+        // No supported Floodgate plugin
+        if (constructListener == null) return null;
 
-        if (isAvailable("org.geysermc.floodgate.BukkitPlugin")) {
-            listenerConstructor = FloodgateBukkitListener::new;
+        this.storage = new FloodgateStorage();
+        this.listenerConstructor = constructListener;
+        return new FloodgateExtension(storage);
+    }
+
+    private BiFunction<FloodgateStorage, Caller, FloodgateListener> getListenerConstructor() {
+        if (isAvailable("org.geysermc.floodgate.SpigotPlugin")) {
+            return FloodgateBukkitListener::new;
         } else if (isAvailable("org.geysermc.floodgate.BungeePlugin")) {
-            listenerConstructor = FloodgateBungeeListener::new;
+            return FloodgateBungeeListener::new;
         } else if (isAvailable("org.geysermc.floodgate.VelocityPlugin")) {
-            // TODO: add implementation when it is possible. at the time of writing,
-            //  we're unable to register listeners or run things through the scheduler on velocity
-            return null;
+            return FloodgateVelocityListener::new;
         } else {
             return null;
         }
-
-        this.storage = new FloodgateStorage();
-        this.listenerConstructor = listenerConstructor;
-        return new FloodgateExtension(storage);
     }
 
 }
