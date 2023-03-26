@@ -10,6 +10,7 @@ import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.util.LinkedPlayer;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -29,12 +30,13 @@ public class FloodgateVelocityListener extends FloodgateListener {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
 
-            FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
-            if (floodgatePlayer == null) return;
-
-            LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
-
-            SchedulerService.getInstance().runAsync(() -> storeData(event, uuid, floodgatePlayer, linkedPlayer));
+            Optional.ofNullable(FloodgateApi.getInstance())
+                    .map(api -> api.getPlayer(uuid))
+                    .ifPresent(floodgatePlayer -> {
+                        LinkedPlayer linkedPlayer = floodgatePlayer.getLinkedPlayer();
+                        SchedulerService.getInstance()
+                                .runAsync(() -> storeData(event, uuid, floodgatePlayer, linkedPlayer));
+                    });
         } catch (LinkageError ignored) {
             // Related to
             // https://github.com/plan-player-analytics/Plan/issues/2004
